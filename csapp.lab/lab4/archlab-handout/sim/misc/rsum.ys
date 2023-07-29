@@ -1,0 +1,32 @@
+#name, 1
+main:
+	irmovq $200, %rsp
+	irmovq ele1, %rdi
+	call rsum_list
+	halt
+
+rsum_list:
+	irmovq $0, %rcx
+	irmovq $0, %rax
+	subq %rcx, %rdi
+	je end
+	pushq %rbx
+	mrmovq (%rdi), %rbx
+	mrmovq 8(%rdi), %rdi
+	call rsum_list
+	addq %rbx, %rax
+	popq %rbx
+
+end:
+	ret
+
+.align 8
+ele1:
+	.quad 0x00a
+	.quad ele2
+ele2:
+	.quad 0x0b0
+	.quad ele3
+ele3:
+	.quad 0xc00
+	.quad 0

@@ -1,0 +1,46 @@
+#name, 1
+main:
+	irmovq $200, %rsp
+	irmovq src, %rdi
+	irmovq dest, %rsi
+	irmovq $3, %rdx
+	call copy_block
+	halt
+
+copy_block:
+	# %rdi - src, %rsi - dest, %rdx - len
+	irmovq $0, %rax
+	irmovq $8, %rcx
+	irmovq $1, %r8
+	pushq %rbx
+	pushq %rbp
+	irmovq $0, %rbx # be used to check if content of one register is equal to zero
+	jmp check
+
+loop:
+	mrmovq (%rdi), %rbp
+	rmmovq %rbp, (%rsi)
+	xorq %rbp, %rax
+	addq %rcx, %rdi
+	addq %rcx, %rsi
+	subq %r8, %rdx
+
+check:
+	subq %rbx, %rdx
+	jne loop
+
+end:
+	popq %rbp
+	popq %rbx
+	ret
+
+.align 8
+src:
+	.quad 0x00a
+	.quad 0x0b0
+	.quad 0xc00
+
+dest:
+	.quad 0x111
+	.quad 0x222
+	.quad 0x333

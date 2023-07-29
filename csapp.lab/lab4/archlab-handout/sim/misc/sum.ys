@@ -1,0 +1,37 @@
+#name, 1
+main:
+	irmovq $200, %rsp
+	irmovq ele1, %rdi 
+	call sum_list
+	halt
+
+sum_list:
+	#YangHongBin 123456
+	# %rdi - 参数指针
+	irmovq $0, %rax
+	irmovq $0, %rcx
+	jmp isZero
+
+loop:
+	mrmovq	(%rdi), %rdx
+	addq	%rdx, %rax
+	mrmovq 8(%rdi), %rdi
+
+isZero:
+	subq %rcx, %rdi
+	jne loop
+
+end:
+	ret
+
+
+.align 8
+ele1:
+	.quad 0x00a
+	.quad ele2
+ele2:
+	.quad 0x0b0
+	.quad ele3
+ele3:
+	.quad 0xc00
+	.quad 0
